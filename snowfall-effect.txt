@@ -1,0 +1,200 @@
+Now, the Shopify theme code editor will open.
+
+In the left menu, scroll down to the Snippets and click “Add a new snippet.”
+
+Enter the snippet name as “meetanshi-snowfall-effect” and click “Done.”
+
+Create a new snippet for snowfall effect in Shopify
+Now, paste the following code in the meetanshi-snowfall-effect.liquid file:
+
+<script>     
+   document.addEventListener("DOMContentLoaded", function() {     
+    var script = document.createElement('script');     
+    script.src = 'https://code.jquery.com/jquery-3.6.0.min.js';     
+    script.type = 'text/javascript';     
+    document.getElementsByTagName('head')[0].appendChild(script);     
+    script.onload = function() {     
+    var winterModeEnabled = {{ settings.winter_mode | default: true }};     
+         
+    if (winterModeEnabled) {     
+    var minSnowflakeSize = parseFloat({{ settings.min_snowflake_size | default: 0.6 }});     
+    var maxSnowflakeSize = parseFloat({{ settings.max_snowflake_size | default: 1.4 }});     
+    var gravity = parseFloat({{ settings.gravity | default: 1 }});     
+    var snowflakeColors = [     
+    '{{ settings.snowflake_color_1 | default: "#ffffff" }}',     
+    '{{ settings.snowflake_color_2 | default: "#f5fbff" }}',     
+    '{{ settings.snowflake_color_3 | default: "#e7f5ff" }}'     
+    ];     
+    // Clear previous snowflakes     
+    $('.snowflakes').remove();     
+    // Generate and append new snowflakes based on the "Number of Snowflakes" setting     
+    var $snowflakes = $('<div class="snowflakes" aria-hidden="true"></div>');     
+    var numSnowflakes = {{ settings.num_snowflakes | default: 50 }};     
+    for (var i = 0; i < numSnowflakes; i++) {     
+    var size = minSnowflakeSize + Math.random() * (maxSnowflakeSize - minSnowflakeSize),     
+    opacity = Math.random() * 0.7 + 0.3,     
+    posX = Math.random() * 100,     
+    fallDelay = Math.random() * 5000,     
+    fallDuration = (Math.random() + 0.5) * 10000 / gravity;     
+    var snowflakeType = '{{ settings.snowflake_type | default: "❄" }}';     
+    var randomColor = snowflakeColors[Math.floor(Math.random() * snowflakeColors.length)];     
+    var $flake = $('<div class="flake">' + snowflakeType + '</div>');     
+    $flake.css({     
+    fontSize: size + 'em',     
+    left: posX + '%',     
+    opacity: opacity,     
+    color: randomColor,     
+    animation: `fall ${fallDuration}ms linear ${fallDelay}ms infinite, rotate ${Math.random() > 0.5 ? 'normal' : 'reverse'} ${Math.random() * 20000 + 10000}ms infinite`     
+    }).appendTo($snowflakes);     
+    }     
+    $snowflakes.appendTo('body');     
+    }     
+    }     
+   });     
+</script>     
+ <style>     
+ .snowflakes .flake {     
+  position: fixed;     
+  top: -10px;     
+  z-index: 9999;     
+  color: #fff;     
+  pointer-events: none;     
+  user-select: none;     
+ }     
+ .snowflakes .flake.small { font-size: 0.6em; }     
+ .snowflakes .flake.medium { font-size: 1em; }     
+ .snowflakes .flake.large { font-size: 1.4em; }     
+ @keyframes fall {     
+  0% { opacity: 0; }     
+  10% { opacity: 1; }     
+  90% { opacity: 1; }     
+  100% { top: 100%; opacity: 0; }     
+ }     
+ @keyframes rotate {     
+  0%, 100% { transform: rotate(0deg); }     
+  50% { transform: rotate(360deg); }     
+ }     
+ </style>
+And click “Save.”
+
+Save snowfall effect snippet
+Step 2: Define Settings Schema
+Next step is to define the configuration for the Shopify snowfall effect in the settings schema file.
+
+In the left menu, search for “settings” and open the settings_schema.json file present inside the config folder.
+
+Open settings schema file in Shopify
+Now, copy the following code and paste it right after the first “[” square bracket:
+
+{
+    "name": "Meetanshi Snowfall Settings",
+    "settings": [
+      {
+        "type": "select",
+        "label": "Winter Mode",
+        "id": "winter_mode",
+        "default": "true",
+        "options": [
+          {
+            "value": "true",
+            "label": "On"
+          },
+          {
+            "value": "false",
+            "label": "Off"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "label": "Number of Snowflakes",
+        "id": "num_snowflakes",
+        "default": 50,
+        "min": 10,
+        "max": 200,
+        "step": 10
+      },
+      {
+        "type": "range",
+        "label": "Minimum Snowflake Size",
+        "id": "min_snowflake_size",
+        "default": 0.6,
+        "min": 0.1,
+        "max": 2,
+        "step": 0.1
+      },
+      {
+        "type": "range",
+        "label": "Maximum Snowflake Size",
+        "id": "max_snowflake_size",
+        "default": 1.4,
+        "min": 0.1,
+        "max": 2,
+        "step": 0.1
+      },
+      {
+        "type": "select",
+        "label": "Snowflake Type",
+        "id": "snowflake_type",
+        "default": "❄",
+        "options": [
+          {
+            "value": "❄",
+            "label": "❄"
+          },
+          {
+            "value": "❅",
+            "label": "❅"
+          },
+          {
+            "value": "❆",
+            "label": "❆"
+          }
+        ]
+      },
+      {
+        "type": "color",
+        "label": "Color 1",
+        "id": "snowflake_color_1",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "label": "Color 2",
+        "id": "snowflake_color_2",
+        "default": "#f5fbff"
+      },
+      {
+        "type": "color",
+        "label": "Color 3",
+        "id": "snowflake_color_3",
+        "default": "#e7f5ff"
+      },
+      {
+        "type": "range",
+        "label": "Gravity",
+        "id": "gravity",
+        "default": 1,
+        "min": 0.5,
+        "max": 5,
+        "step": 0.5
+      }
+    ]
+  },
+And click “Save.”
+
+Add Shopify snowfall effect settings schema json
+Note: Do not forget the comma (,) after the snowfall animation settings code.
+
+Step 3: Render the Snowfall Snippet in the theme.liquid File
+Now, add the snowfall snippet code to liquid file where you want to add the effect.
+
+For e.g., if you want to add Snowfall effect on the entire Shopify store, you can add it to the theme.liquid file.
+
+Copy the following code snippet:
+
+{% render 'meetanshi-snowfall-effect' %}
+and paste it before the </body> tag as shown below.
+
+Add Shopify snowfall effect to theme liquid file
+Click “Save.”
